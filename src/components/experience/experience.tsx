@@ -1,10 +1,22 @@
+import Light from "./light";
+
 const Experience = () => {
   return (
-    <mesh>
-      <boxGeometry />
-      <meshBasicMaterial color="red" />
-    </mesh>
-  )
-}
+    <>
+      <Light />
+      {/* <Box position={[0, 0, 0]} /> */}
+      {/* <Capsule />
+      <Cone />
+      <Cylinder />
+      <Dodecahedron />
+      <Icosahedron />
+      <Octahedron />
+      <Sphere />
+      <Tetrahedron />
+      <Torus />
+      <TorusKnot /> */}
+    </>
+  );
+};
 
-export default Experience
+export default Experience;
