@@ -30,7 +30,10 @@ const Shape = ({ position, scale, rotation, color, shape }: ShapeProps) => {
       {shape === "torus" && <torusGeometry />}
       {shape === "torusKnot" && <torusKnotGeometry />}
       {shape === "dodecahedron" && <dodecahedronGeometry />}
-      <meshBasicMaterial color={color} />
+      {shape === "icosahedron" && <icosahedronGeometry />}
+      {shape === "octahedron" && <octahedronGeometry />}
+      {shape === "tetrahedron" && <tetrahedronGeometry />}
+      <meshStandardMaterial color={color} />
     </mesh>
   );
 };
