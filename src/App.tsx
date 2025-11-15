@@ -1,9 +1,14 @@
+import { Canvas } from "@react-three/fiber";
+import Experience from "./components/experience/experience";
+
 function App() {
   return (
     <>
-      <h1>Hello World</h1>
+      <Canvas className="w-full! h-screen! fixed! top-0! left-0!">
+        <Experience />
+      </Canvas>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
