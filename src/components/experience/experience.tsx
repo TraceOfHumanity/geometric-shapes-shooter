@@ -1,13 +1,15 @@
 import { OrbitControls } from "@react-three/drei";
 import Light from "./light";
-import Shape from "./shape";
+import Turret from "./turret";
+// import Shape from "./shape";
 
 const Experience = () => {
   return (
     <>
       <Light />
       <OrbitControls />
-      <Shape
+      <Turret />
+      {/* <Shape
         position={[0, 0, 0]}
         scale={[1, 1, 1]}
         rotation={[0, 0, 0]}
@@ -83,7 +85,7 @@ const Experience = () => {
         rotation={[0, 0, 0]}
         color="white"
         shape="tetrahedron"
-      />
+      /> */}
     </>
   );
 };
