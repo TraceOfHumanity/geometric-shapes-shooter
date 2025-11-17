@@ -1,17 +1,17 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
-import type { Mesh } from "three";
+import type { Mesh, Vector2 } from "three";
 
-const Turret = () => {
+const Turret = ({ pointPosition }: { pointPosition: Vector2 }) => {
   const { nodes } = useGLTF("/turret.glb");
   const turretRef = useRef<Mesh>(null);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (turretRef.current) {
-      const { x, y } = state.pointer;
+      const { x, y } = pointPosition;
       const angle = Math.atan2(x, y);
-      turretRef.current.rotation.z = angle;
+      turretRef.current.rotation.y = angle;
     }
   });
   return (
@@ -21,8 +21,6 @@ const Turret = () => {
         geometry={nodes.turret.geometry}
         material={nodes.turret.material}
         position={[0, 2.3, 0]}
-        rotation={[Math.PI / 2, 0, 0]}
-        scale={0.3}
         ref={turretRef}
       />
     </group>

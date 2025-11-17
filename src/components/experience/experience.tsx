@@ -1,14 +1,34 @@
 import { OrbitControls } from "@react-three/drei";
 import Light from "./light";
 import Turret from "./turret";
+import { useEffect, useState } from "react";
+import { Vector2 } from "three";
 // import Shape from "./shape";
 
 const Experience = () => {
+  const [pointPosition, setPointPosition] = useState<Vector2>(
+    new Vector2(0, 0),
+  );
+
+  useEffect(() => {
+    console.log(pointPosition);
+  }, [pointPosition]);
   return (
     <>
       <Light />
       <OrbitControls />
-      <Turret />
+      <Turret pointPosition={pointPosition} />
+      <mesh
+        position={[0, 0, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={[100, 100, 100]}
+        onPointerMove={(event) => {
+          setPointPosition(new Vector2(event.point.x, event.point.z));
+        }}
+      >
+        <planeGeometry />
+        <meshStandardMaterial color="red" />
+      </mesh>
       {/* <Shape
         position={[0, 0, 0]}
         scale={[1, 1, 1]}
