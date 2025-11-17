@@ -1,8 +1,8 @@
-import { OrbitControls } from "@react-three/drei";
 import Light from "./light";
 import Turret from "./turret";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Vector2 } from "three";
+import Camera from "./camera";
 // import Shape from "./shape";
 
 const Experience = () => {
@@ -10,14 +10,15 @@ const Experience = () => {
     new Vector2(0, 0),
   );
 
-  useEffect(() => {
-    console.log(pointPosition);
-  }, [pointPosition]);
+  // useEffect(() => {
+  //   console.log(pointPosition);
+  // }, [pointPosition]);
   return (
     <>
       <Light />
-      <OrbitControls />
+      {/* <OrbitControls /> */}
       <Turret pointPosition={pointPosition} />
+      <Camera pointPosition={pointPosition} />
       <mesh
         position={[0, 0, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
