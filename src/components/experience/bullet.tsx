@@ -7,9 +7,10 @@ type BulletProps = {
   direction: Vector3;
   speed?: number;
   onDestroy?: () => void;
+  onPositionUpdate?: (position: Vector3) => void;
 };
 
-const Bullet = ({ position, direction, speed = 10, onDestroy }: BulletProps) => {
+const Bullet = ({ position, direction, speed = 10, onDestroy, onPositionUpdate }: BulletProps) => {
   const bulletRef = useRef<Mesh>(null);
   const distanceTraveled = useRef(0);
   const maxDistance = 50;
@@ -21,6 +22,8 @@ const Bullet = ({ position, direction, speed = 10, onDestroy }: BulletProps) => 
         direction.clone().multiplyScalar(moveDistance)
       );
       distanceTraveled.current += moveDistance;
+
+      onPositionUpdate?.(bulletRef.current.position.clone());
 
       if (distanceTraveled.current >= maxDistance) {
         onDestroy?.();

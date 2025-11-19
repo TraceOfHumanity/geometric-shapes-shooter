@@ -16,6 +16,7 @@ type BulletData = {
 type EnemyData = {
   id: string;
   startPosition: Vector3;
+  currentPosition: Vector3;
   shape: "box" | "sphere" | "cylinder" | "cone" | "capsule" | "torus" | "torusKnot" | "dodecahedron" | "icosahedron" | "octahedron" | "tetrahedron";
   color: string;
 };
@@ -33,7 +34,7 @@ const colors = [
 
 const SPAWN_DISTANCE = 30;
 const SPAWN_INTERVAL = 2;
-const COLLISION_DISTANCE = 1.5;
+const COLLISION_DISTANCE = 2.5;
 
 const Experience = () => {
   const [pointPosition, setPointPosition] = useState<Vector2>(
@@ -61,6 +62,14 @@ const Experience = () => {
     setBullets((prev) => prev.filter((bullet) => bullet.id !== id));
   }, []);
 
+  const handleBulletPositionUpdate = useCallback((id: string, position: Vector3) => {
+    setBullets((prev) =>
+      prev.map((bullet) =>
+        bullet.id === id ? { ...bullet, position } : bullet
+      )
+    );
+  }, []);
+
   const handleEnemyDestroy = useCallback((id: string) => {
     setEnemies((prev) => prev.filter((enemy) => enemy.id !== id));
   }, []);
@@ -86,42 +95,44 @@ const Experience = () => {
       {
         id: `enemy-${enemyIdCounter.current++}`,
         startPosition,
+        currentPosition: startPosition.clone(),
         shape,
         color,
       },
     ]);
   }, []);
 
+  const handleEnemyPositionUpdate = useCallback((id: string, position: Vector3) => {
+    setEnemies((prev) =>
+      prev.map((enemy) =>
+        enemy.id === id ? { ...enemy, currentPosition: position } : enemy
+      )
+    );
+  }, []);
+
   const checkCollisions = useCallback(() => {
     setBullets((prevBullets) => {
+      const bulletsToRemove = new Set<string>();
+      
       setEnemies((prevEnemies) => {
-        const remainingBullets: BulletData[] = [];
-        const remainingEnemies: EnemyData[] = [];
+        const enemiesToRemove = new Set<string>();
 
         prevBullets.forEach((bullet) => {
-          let hit = false;
           prevEnemies.forEach((enemy) => {
-            const enemyPosition = new Vector3(
-              enemy.startPosition.x,
-              enemy.startPosition.y,
-              enemy.startPosition.z
-            );
-            const distance = bullet.position.distanceTo(enemyPosition);
+            const distance = bullet.position.distanceTo(enemy.currentPosition);
             
             if (distance < COLLISION_DISTANCE) {
-              hit = true;
-              handleEnemyDestroy(enemy.id);
+              bulletsToRemove.add(bullet.id);
+              enemiesToRemove.add(enemy.id);
             }
           });
-
-          if (!hit) {
-            remainingBullets.push(bullet);
-          }
         });
 
-        return remainingEnemies;
+        enemiesToRemove.forEach((id) => handleEnemyDestroy(id));
+        return prevEnemies.filter((enemy) => !enemiesToRemove.has(enemy.id));
       });
-      return prevBullets;
+      
+      return prevBullets.filter((bullet) => !bulletsToRemove.has(bullet.id));
     });
   }, [handleEnemyDestroy]);
 
@@ -148,6 +159,7 @@ const Experience = () => {
           position={bullet.position}
           direction={bullet.direction}
           onDestroy={() => handleBulletDestroy(bullet.id)}
+          onPositionUpdate={(position) => handleBulletPositionUpdate(bullet.id, position)}
         />
       ))}
 
@@ -161,6 +173,7 @@ const Experience = () => {
           color={enemy.color}
           onReachCenter={handleEnemyReachCenter}
           onDestroy={handleEnemyDestroy}
+          onPositionUpdate={handleEnemyPositionUpdate}
         />
       ))}
 

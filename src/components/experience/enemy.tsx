@@ -23,6 +23,7 @@ type EnemyProps = {
   speed?: number;
   onReachCenter?: (id: string) => void;
   onDestroy?: (id: string) => void;
+  onPositionUpdate?: (id: string, position: Vector3) => void;
 };
 
 const Enemy = ({
@@ -34,6 +35,7 @@ const Enemy = ({
   speed = 2,
   onReachCenter,
   onDestroy,
+  onPositionUpdate,
 }: EnemyProps) => {
   const enemyRef = useRef<Group>(null);
 
@@ -56,6 +58,7 @@ const Enemy = ({
         onDestroy?.(id);
       } else {
         enemyRef.current.position.copy(newPosition);
+        onPositionUpdate?.(id, newPosition.clone());
 
         const rotationSpeed = 2;
         enemyRef.current.rotation.x += rotationSpeed * delta;
